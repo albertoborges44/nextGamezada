@@ -17,6 +17,9 @@ public class GameDaoImpl implements GameDAO{
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final String NAME = "name";
+    private static final String PRICE = "price";
+    private static final String GENRE = "genre";
+
 
     @Autowired
     public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -39,6 +42,18 @@ public class GameDaoImpl implements GameDAO{
         String sql = "SELECT id, name, price FROM Games";
 
         return namedParameterJdbcTemplate.query(sql, parametros, new GameMapper());
+    }
+
+    public Game createGame(Game game) {
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put(NAME, game.getName());
+        parametros.put(PRICE, game.getPrice());
+        parametros.put(GENRE, game.getGenre());
+
+        String sql = "INSERT INTO Games (name, price, genre)" +
+                "VALUES(:name, :price, :genre)";
+
+        return (Game) namedParameterJdbcTemplate.query(sql, parametros, new GameMapper());
     }
 
     private static final class GameMapper implements RowMapper<Game> {

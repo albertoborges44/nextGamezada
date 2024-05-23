@@ -22,4 +22,9 @@ public class GameServiceImpl implements GameService{
     public List<Game> findByAll() {
         return dao.findAll();
     }
+
+    @Override
+    public Game createGame(Game game) {
+        return dao.createGame(game);
+    }
 }

@@ -23,6 +23,12 @@ public class Game {
         id = 0;
     }
 
+    public Game(String name, String genre, String price) {
+        this.name = name;
+        this.genre = genre;
+        this.price = price;
+    }
+
     public String getName() {
         return name;
     }

@@ -7,4 +7,6 @@ public interface GameDAO  {
     Game findByName(String name);
 
     List<Game> findAll();
+
+    Game createGame(Game game);
 }

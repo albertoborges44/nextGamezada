@@ -7,4 +7,6 @@ public interface GameService {
     Game findByName(String name);
 
     List<Game> findByAll();
+
+    Game createGame(Game game);
 }
