@@ -1,7 +1,8 @@
-package com.nextGamezada.games;
+package com.nextgamezada.games;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public Game createGame(Game game) {
-        return dao.createGame(game);
+    public void createGame(String name, BigDecimal price, String genre) {
+        dao.createGame(name, price, genre);
     }
 }

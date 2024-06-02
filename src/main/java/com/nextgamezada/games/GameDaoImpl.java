@@ -1,10 +1,11 @@
-package com.nextGamezada.games;
+package com.nextgamezada.games;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -44,16 +45,16 @@ public class GameDaoImpl implements GameDAO{
         return namedParameterJdbcTemplate.query(sql, parametros, new GameMapper());
     }
 
-    public Game createGame(Game game) {
+    public void createGame(String name, BigDecimal price, String genre) {
         Map<String, Object> parametros = new HashMap<>();
-        parametros.put(NAME, game.getName());
-        parametros.put(PRICE, game.getPrice());
-        parametros.put(GENRE, game.getGenre());
+        parametros.put(NAME, name);
+        parametros.put(PRICE, price);
+        parametros.put(GENRE, genre);
 
         String sql = "INSERT INTO Games (name, price, genre)" +
                 "VALUES(:name, :price, :genre)";
 
-        return (Game) namedParameterJdbcTemplate.query(sql, parametros, new GameMapper());
+        namedParameterJdbcTemplate.update(sql, parametros);
     }
 
     private static final class GameMapper implements RowMapper<Game> {
@@ -61,8 +62,8 @@ public class GameDaoImpl implements GameDAO{
         public Game mapRow(ResultSet rs, int rowNum) throws SQLException {
             Game game = new Game();
             game.setId(rs.getLong("id"));
-            game.setName(rs.getString("name"));
-            game.setPrice(rs.getString("price"));
+            game.setName(rs.getString(NAME));
+            game.setPrice(rs.getString(PRICE));
             return game;
         }
     }

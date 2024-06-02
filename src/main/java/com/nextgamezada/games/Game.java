@@ -1,4 +1,4 @@
-package com.nextGamezada.games;
+package com.nextgamezada.games;
 
 
 public class Game {

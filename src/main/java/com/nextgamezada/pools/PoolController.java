@@ -1,4 +1,4 @@
-package com.nextGamezada.pools;
+package com.nextgamezada.pools;
 
 public class PoolController {
 }

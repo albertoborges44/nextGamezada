@@ -1,9 +1,10 @@
-package com.nextGamezada.games;
+package com.nextgamezada.games;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,12 +38,8 @@ public class GameController {
     }
 
     @PostMapping(value = "/game")
-    public ResponseEntity<Game> createGame(@RequestBody Game newGame) {
-        if (Objects.nonNull(gameService.findByName(newGame.getName()))) {
-            return new ResponseEntity(new Error("Game with name " + newGame.getName() +
-                    "already exists"), HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<Game>(gameService.createGame(newGame), HttpStatus.CREATED);
+    public void createGame(@RequestParam String name, @RequestParam BigDecimal price, @RequestParam String genre) {
+        gameService.createGame(name, price, genre);
     }
 
 }

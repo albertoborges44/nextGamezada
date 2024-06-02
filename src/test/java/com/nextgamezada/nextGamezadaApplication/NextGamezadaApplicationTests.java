@@ -1,4 +1,4 @@
-package com.nextGamezada.nextGamezadaApplication;
+package com.nextgamezada.nextGamezadaApplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
