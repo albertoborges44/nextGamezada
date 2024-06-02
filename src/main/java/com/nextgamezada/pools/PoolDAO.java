@@ -1,4 +1,9 @@
 package com.nextgamezada.pools;
 
-public class PoolDAO {
+import java.util.List;
+
+public interface PoolDAO {
+
+    List<Pool> findByAll();
+    Long createPool(Pool pool);
 }
