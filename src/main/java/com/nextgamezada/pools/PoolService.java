@@ -4,9 +4,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface PoolService {
 
-    List<Pool> findByAll();
+    List<Pool> findAll();
     Long createPool(Pool pool);
 }

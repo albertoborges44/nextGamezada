@@ -1,7 +1,10 @@
 package com.nextgamezada.pools;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class PoolServiceImpl implements PoolService{
 
     private final PoolDAO dao;
@@ -11,8 +14,8 @@ public class PoolServiceImpl implements PoolService{
     }
 
     @Override
-    public List<Pool> findByAll() {
-        return dao.findByAll();
+    public List<Pool> findAll() {
+        return dao.findAll();
     }
 
     @Override

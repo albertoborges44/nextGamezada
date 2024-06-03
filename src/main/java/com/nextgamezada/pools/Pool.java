@@ -1,5 +1,6 @@
 package com.nextgamezada.pools;
 
+import com.nextgamezada.enums.StatusEnum;
 import com.nextgamezada.games.Game;
 
 import java.util.List;
@@ -14,8 +15,18 @@ public class Pool {
 
     Game winnerGame;
 
+    int size;
+
+    Integer status;
+
     public Pool(){
 
+    }
+
+    public Pool(String name, int size, Integer status) {
+        this.name = name;
+        this.size = size;
+        this.status = status;
     }
 
     public long getId() {
@@ -48,5 +59,21 @@ public class Pool {
 
     public void setWinnerGame(Game winnerGame) {
         this.winnerGame = winnerGame;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

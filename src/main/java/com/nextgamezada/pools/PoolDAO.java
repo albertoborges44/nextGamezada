@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface PoolDAO {
 
-    List<Pool> findByAll();
+    List<Pool> findAll();
     Long createPool(Pool pool);
 }
