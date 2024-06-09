@@ -28,4 +28,13 @@ public class GameServiceImpl implements GameService{
     public void createGame(String name, BigDecimal price, String genre) {
         dao.createGame(name, price, genre);
     }
+
+    public Long editGame(Game game) {
+        return dao.editGame(game);
+    }
+
+    @Override
+    public Long deletePool(List<Long> ids) {
+        return dao.deletePool(ids);
+    }
 }

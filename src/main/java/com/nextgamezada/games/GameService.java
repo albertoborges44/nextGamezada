@@ -10,4 +10,8 @@ public interface GameService {
     List<Game> findByAll();
 
     void createGame(String name, BigDecimal price, String genre);
+
+    Long editGame(Game game);
+
+    Long deletePool(List<Long> ids);
 }

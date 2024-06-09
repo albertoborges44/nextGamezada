@@ -1,5 +1,6 @@
 package com.nextgamezada.games;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,26 @@ public class GameController {
     @PostMapping(value = "/game")
     public void createGame(@RequestParam String name, @RequestParam BigDecimal price, @RequestParam String genre) {
         gameService.createGame(name, price, genre);
+    }
+
+    @PutMapping(value = "game")
+    public ResponseEntity editGame(@RequestBody Game game) {
+        Long row = gameService.editGame(game);
+        if(Objects.isNull(row)) {
+            return new ResponseEntity(
+                    new Error("Could not edit game"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(row, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "game")
+    public ResponseEntity deleteGame(@RequestBody List<Long> ids) {
+        Long rows = gameService.deletePool(ids);
+        if(Objects.isNull(rows)) {
+            return new ResponseEntity(
+                    new Error("Could not delete pool(s)"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(rows, HttpStatus.OK);
     }
 
 }

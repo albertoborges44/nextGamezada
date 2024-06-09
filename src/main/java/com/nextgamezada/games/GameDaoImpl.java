@@ -1,5 +1,6 @@
 package com.nextgamezada.games;
 
+import com.nextgamezada.pools.Pool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,9 +18,17 @@ public class GameDaoImpl implements GameDAO{
 
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private static final String ID = "id";
+
+    private static final String IS_FINISHED = "isFinished";
+
+    private static final String IS_COOP = "isCoop";
     private static final String NAME = "name";
     private static final String PRICE = "price";
     private static final String GENRE = "genre";
+    private static final String ID_LIST = "ids";
+    private static final String ON_SALE = "onSale";
+    private static final String MAXPLAYERS = "maxPlayers";
 
 
     @Autowired
@@ -55,6 +64,42 @@ public class GameDaoImpl implements GameDAO{
                 "VALUES(:name, :price, :genre)";
 
         namedParameterJdbcTemplate.update(sql, parametros);
+    }
+
+    @Override
+    public Long editGame(Game game) {
+        HashMap<String, Object> parametros = new HashMap<>();
+        parametros.put(ID, game.getId());
+        parametros.put(NAME, game.getName());
+        parametros.put(IS_FINISHED, game.isFinished());
+        parametros.put(IS_COOP, game.isCoop());
+        parametros.put(GENRE, game.getGenre());
+        parametros.put(PRICE, game.getPrice());
+        parametros.put(ON_SALE, game.isOnSale());
+        parametros.put(MAXPLAYERS, game.getMaxPlayers());
+
+        String sql = "UPDATE Games " +
+                "SET name = :name, " +
+                "isFinished = :isFinished," +
+                "isCoop = :isCoop, " +
+                "genre = :genre, " +
+                "price = :price, " +
+                "onSale = :onSale," +
+                "maxPlayers = :maxPLayers," +
+                "WHERE id = :id";
+
+        return (long) namedParameterJdbcTemplate.update(sql, parametros);
+    }
+
+    @Override
+    public Long deletePool(List<Long> ids) {
+        HashMap<String, Object> parametros = new HashMap<>();
+        parametros.put(ID_LIST, ids);
+
+        String sql = "DELETE FROM Games as g " +
+                "WHERE g.id IN (:ids)";
+
+        return (long) namedParameterJdbcTemplate.update(sql, parametros);
     }
 
     private static final class GameMapper implements RowMapper<Game> {
