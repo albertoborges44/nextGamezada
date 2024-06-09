@@ -1,11 +1,9 @@
 package com.nextgamezada.pools;
 
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,12 +27,31 @@ public class PoolController {
     }
 
     @PostMapping(value = "/pool")
-    public ResponseEntity createPool(@RequestBody Pool pool) {
-        Long id = poolService.createPool(pool);
+    public ResponseEntity createPool(@RequestBody Pool pool, @RequestParam Long id) {
         if(Objects.isNull(id)) {
             return new ResponseEntity<>(
                     new Error("Could not create pool"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(id, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "pool")
+    public ResponseEntity editPool(@RequestBody Pool pool) {
+        Long id = poolService.editPool(pool);
+        if(Objects.isNull(id)) {
+            return new ResponseEntity(
+                    new Error("Could not edit pool"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(id, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "pool")
+    public ResponseEntity deletePool(@RequestBody List<Long> ids) {
+        Long rows = poolService.deletePool(ids);
+        if(Objects.isNull(rows)) {
+            return new ResponseEntity(
+                    new Error("Could not delete pool(s)"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(rows, HttpStatus.OK);
     }
 }

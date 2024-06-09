@@ -22,4 +22,16 @@ public class PoolServiceImpl implements PoolService{
     public Long createPool(Pool pool) {
        return dao.createPool(pool);
     }
+
+    @Override
+    public Long editPool(Pool pool) {
+        return dao.editPool(pool);
+    }
+
+    @Override
+    public Long deletePool(List<Long> ids) {
+        return dao.deletePool(ids);
+    }
+
+
 }
