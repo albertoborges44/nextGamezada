@@ -1,6 +1,8 @@
 package com.nextgamezada.games;
 
+import jakarta.persistence.Entity;
 
+@Entity
 public class Game {
 
     private String name;
