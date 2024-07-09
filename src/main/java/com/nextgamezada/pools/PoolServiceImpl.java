@@ -1,7 +1,10 @@
 package com.nextgamezada.pools;
 
+import com.nextgamezada.games.Game;
+import com.nextgamezada.games.GameDAO;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Service
@@ -9,8 +12,11 @@ public class PoolServiceImpl implements PoolService{
 
     private final PoolDAO dao;
 
-    public PoolServiceImpl(PoolDAO poolDAO) {
+    private final GameDAO gameDAO;
+
+    public PoolServiceImpl(PoolDAO poolDAO, GameDAO gameDAO) {
         this.dao = poolDAO;
+        this.gameDAO = gameDAO;
     }
 
     @Override
@@ -31,6 +37,21 @@ public class PoolServiceImpl implements PoolService{
     @Override
     public Long deletePool(List<Long> ids) {
         return dao.deletePool(ids);
+    }
+
+    public Game runPool(List<Game> gameList) {
+
+        SecureRandom secureRandom = new SecureRandom();
+        int index = secureRandom.nextInt(gameList.size());
+
+        Game winnerGame;
+        try {
+            winnerGame = gameDAO.findByName(gameList.get(index).getName());
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding the game" + e.getMessage());
+        }
+
+        return winnerGame;
     }
 
 

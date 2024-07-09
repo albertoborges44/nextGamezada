@@ -1,5 +1,7 @@
 package com.nextgamezada.pools;
 
+import com.nextgamezada.games.Game;
+import com.nextgamezada.gamesInPool.GamesInPoolService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,11 @@ public class PoolController {
 
     private final PoolService poolService;
 
-    public PoolController(PoolService poolService) {
+    private final GamesInPoolService gamesInPoolService;
+
+    public PoolController(PoolService poolService, GamesInPoolService gamesInPoolService) {
         this.poolService = poolService;
+        this.gamesInPoolService = gamesInPoolService;
     }
 
     @GetMapping(value = "/pools")
@@ -53,5 +58,14 @@ public class PoolController {
                     new Error("Could not delete pool(s)"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity(rows, HttpStatus.OK);
+    }
+    @PostMapping(value = "runPool")
+    public ResponseEntity runPool(@RequestBody Integer poolId) {
+        List<Game> poolList = gamesInPoolService.findByPoolId(poolId);
+        if(Objects.isNull(poolList)) {
+            return new ResponseEntity(new Error("Could not find pool"), HttpStatus.NOT_FOUND);
+        }
+        Game winnerGame = poolService.runPool(poolList);
+        return new ResponseEntity(winnerGame, HttpStatus.OK);
     }
 }

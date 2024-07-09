@@ -1,5 +1,7 @@
 package com.nextgamezada.pools;
 
+import com.nextgamezada.games.Game;
+
 import java.util.List;
 
 public interface PoolService {
@@ -10,4 +12,6 @@ public interface PoolService {
     Long editPool(Pool pool);
 
     Long deletePool(List<Long> ids);
+
+    Game runPool(List<Game> poolList);
 }
