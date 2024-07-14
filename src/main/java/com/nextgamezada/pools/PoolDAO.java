@@ -13,5 +13,4 @@ public interface PoolDAO {
 
     Long deletePool(List<Long> ids);
 
-    Game runPool(List<Game> gameList);
 }

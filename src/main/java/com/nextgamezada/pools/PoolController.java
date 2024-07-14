@@ -59,7 +59,7 @@ public class PoolController {
         }
         return new ResponseEntity(rows, HttpStatus.OK);
     }
-    @PostMapping(value = "runPool")
+    @PostMapping(value = "/runPool")
     public ResponseEntity runPool(@RequestBody Integer poolId) {
         List<Game> poolList = gamesInPoolService.findByPoolId(poolId);
         if(Objects.isNull(poolList)) {
