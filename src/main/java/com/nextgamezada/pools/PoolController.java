@@ -60,12 +60,12 @@ public class PoolController {
         return new ResponseEntity(rows, HttpStatus.OK);
     }
     @PostMapping(value = "/runPool")
-    public ResponseEntity runPool(@RequestBody Integer poolId) {
-        List<Game> poolList = gamesInPoolService.findByPoolId(poolId);
-        if(Objects.isNull(poolList)) {
+    public ResponseEntity runPool(@RequestParam Integer poolId) {
+        List<Game> gamesInPoolList = gamesInPoolService.findByPoolId(poolId);
+        if(Objects.isNull(gamesInPoolList)) {
             return new ResponseEntity(new Error("Could not find pool"), HttpStatus.NOT_FOUND);
         }
-        Game winnerGame = poolService.runPool(poolList);
+        Game winnerGame = poolService.runPool(gamesInPoolList, poolId);
         return new ResponseEntity(winnerGame, HttpStatus.OK);
     }
 }

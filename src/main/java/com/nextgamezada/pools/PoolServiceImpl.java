@@ -39,7 +39,7 @@ public class PoolServiceImpl implements PoolService{
         return dao.deletePool(ids);
     }
 
-    public Game runPool(List<Game> gameList) {
+    public Game runPool(List<Game> gameList, int poolId) {
 
         SecureRandom secureRandom = new SecureRandom();
         int index = secureRandom.nextInt(gameList.size());
@@ -47,6 +47,7 @@ public class PoolServiceImpl implements PoolService{
         Game winnerGame;
         try {
             winnerGame = gameDAO.findByName(gameList.get(index).getName());
+            dao.setWinnerGameAndUpdatePoolStatus(poolId, winnerGame.getId());
         } catch (Exception e) {
             throw new RuntimeException("Error finding the game" + e.getMessage());
         }

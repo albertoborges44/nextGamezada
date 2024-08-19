@@ -1,7 +1,5 @@
 package com.nextgamezada.pools;
 
-import com.nextgamezada.games.Game;
-
 import java.util.List;
 
 public interface PoolDAO {
@@ -12,5 +10,7 @@ public interface PoolDAO {
     Long editPool(Pool pool);
 
     Long deletePool(List<Long> ids);
+
+    int setWinnerGameAndUpdatePoolStatus(int poolId, long gameId);
 
 }

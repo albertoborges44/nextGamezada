@@ -20,8 +20,8 @@ public class PoolDaoImpl implements PoolDAO{
     private static final String WINNER_GAME = "winner_game";
     private static final String ID_LIST = "ids";
     private static final String POOL_ID = "pool_id";
-
     private static final String POOL_NAME = "pool_name";
+    private static final String GAME_ID = "game_id";
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
@@ -31,7 +31,7 @@ public class PoolDaoImpl implements PoolDAO{
 
     public List<Pool> findAll() {
         HashMap<String, Object> parametros = new HashMap<>();
-        String sql = "SELECT id as pool_id, name as pool_name, size, status FROM Pools";
+        String sql = "SELECT id as pool_id, name as pool_name, size, status, winner_game FROM Pools";
 
         return namedParameterJdbcTemplate.query(sql, parametros, new PoolMapper());
     }
@@ -79,6 +79,19 @@ public class PoolDaoImpl implements PoolDAO{
         return (long) namedParameterJdbcTemplate.update(sql, parametros);
     }
 
+    @Override
+    public int setWinnerGameAndUpdatePoolStatus(int poolId, long gameId) {
+        HashMap<String, Object> parametros = new HashMap<>();
+        parametros.put(ID, poolId);
+        parametros.put(WINNER_GAME, gameId);
+
+        String sql = "UPDATE pools " +
+                "SET winner_game = :winner_game " +
+                "WHERE id = :id";
+
+        return namedParameterJdbcTemplate.update(sql, parametros);
+    }
+
     public static final class PoolMapper implements RowMapper<Pool> {
 
         @Override
@@ -88,6 +101,7 @@ public class PoolDaoImpl implements PoolDAO{
             pool.setName(rs.getString(POOL_NAME));
             pool.setSize(rs.getInt(SIZE));
             pool.setStatus(rs.getInt(STATUS));
+            pool.setWinnerGame(rs.getInt(WINNER_GAME));
 
             return pool;
         }
