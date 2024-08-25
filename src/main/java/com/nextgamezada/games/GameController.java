@@ -1,11 +1,12 @@
 package com.nextgamezada.games;
 
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,9 +29,12 @@ public class GameController {
         return new ResponseEntity<>(gamesList, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/game")
-    public ResponseEntity<Game> getByName(@PathVariable("name") String name) {
+    @GetMapping(value = "/game/{name}")
+    public ResponseEntity<Game> getByName(@PathVariable("name") String name) throws URISyntaxException, IOException, InterruptedException {
         Game game = gameService.findByName(name);
+        if(Objects.isNull(game)) {
+            gameService.searchGameInSteamLibrary(name);
+        }
         if (Objects.isNull(game)) {
             return new ResponseEntity(new Error("Game with name" + name +
                     " not found"), HttpStatus.NOT_FOUND);

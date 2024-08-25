@@ -2,13 +2,16 @@ package com.nextgamezada.games;
 
 import com.nextgamezada.pools.Pool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +43,14 @@ public class GameDaoImpl implements GameDAO{
         Map<String, Object> parametros = new HashMap<>();
         parametros.put(NAME, name);
 
-        String sql = "SELECT id, name, price FROM Games WHERE Games.name =:name";
+        String sql = "SELECT id, name, price FROM Games WHERE Games.name = :name";
 
-        return namedParameterJdbcTemplate.queryForObject(sql, parametros, new GameMapper());
+        ArrayList<Game> gameList = (ArrayList<Game>) namedParameterJdbcTemplate.query(
+                sql, parametros, new RowMapperResultSetExtractor<>(new GameMapper()));
+
+        return DataAccessUtils.singleResult(gameList);
+
+        //return namedParameterJdbcTemplate.queryForObject(sql, parametros, new GameMapper());
     }
 
     @Override

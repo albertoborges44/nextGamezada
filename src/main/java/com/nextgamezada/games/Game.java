@@ -2,7 +2,7 @@ package com.nextgamezada.games;
 
 import jakarta.persistence.Entity;
 
-@Entity
+
 public class Game {
 
     private String name;
@@ -28,6 +28,12 @@ public class Game {
     public Game(String name, String genre, String price) {
         this.name = name;
         this.genre = genre;
+        this.price = price;
+    }
+
+    public Game(long id, String name, String price) {
+        this.id = id;
+        this.name = name;
         this.price = price;
     }
 

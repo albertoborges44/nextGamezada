@@ -1,6 +1,8 @@
 package com.nextgamezada.games;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public interface GameService {
@@ -14,4 +16,6 @@ public interface GameService {
     Long editGame(Game game);
 
     Long deletePool(List<Long> ids);
+
+    String searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException;
 }

@@ -4,8 +4,8 @@ import com.nextgamezada.games.Game;
 import com.nextgamezada.games.GameDAO;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class PoolServiceImpl implements PoolService{
@@ -41,8 +41,7 @@ public class PoolServiceImpl implements PoolService{
 
     public Game runPool(List<Game> gameList, int poolId) {
 
-        SecureRandom secureRandom = new SecureRandom();
-        int index = secureRandom.nextInt(gameList.size());
+        int index = ThreadLocalRandom.current().nextInt(gameList.size());
 
         Game winnerGame;
         try {
