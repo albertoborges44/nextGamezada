@@ -1,5 +1,6 @@
 package com.nextgamezada.games;
 
+import com.nextgamezada.steamApp.SteamApp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +31,11 @@ public class GameController {
     }
 
     @GetMapping(value = "/game/{name}")
-    public ResponseEntity<Game> getByName(@PathVariable("name") String name) throws URISyntaxException, IOException, InterruptedException {
+    public ResponseEntity<?> getByName(@PathVariable("name") String name) throws URISyntaxException, IOException, InterruptedException {
         Game game = gameService.findByName(name);
         if(Objects.isNull(game)) {
-            gameService.searchGameInSteamLibrary(name);
+            SteamApp steamApp = gameService.searchGameInSteamLibrary(name);
+            return new ResponseEntity<SteamApp>(steamApp, HttpStatus.OK);
         }
         if (Objects.isNull(game)) {
             return new ResponseEntity(new Error("Game with name" + name +

@@ -1,5 +1,7 @@
 package com.nextgamezada.games;
 
+import com.google.gson.Gson;
+import com.nextgamezada.steamApp.SteamApp;
 import com.nextgamezada.utils.RestApiClient;
 import org.springframework.stereotype.Service;
 
@@ -46,10 +48,28 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public String searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException {
+    public SteamApp searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException {
+
         HttpResponse<String> allGames = restApiClient.getAllSteamGames();
-        boolean achou = allGames.toString().contains(gameName);
+
+        int indexOfDesiredGame = allGames.body().indexOf(gameName);
+        String stringJsonOfDesiredGame = trimDesiredGameJson(allGames.body(), indexOfDesiredGame);
+
+        Gson gson = new Gson();
+        SteamApp steamApp = gson.fromJson(stringJsonOfDesiredGame, SteamApp.class);
+
+        return steamApp;
+
         //TODO: find the game, trim and parse from JSON to object
-        return null;
+
+    }
+
+    private String trimDesiredGameJson(String allGameFromSteamJson, int indexOfDesiredGame) {
+
+        int indexOfStartingBracket = allGameFromSteamJson.lastIndexOf("{", indexOfDesiredGame);
+        int indexOfClosingBracket = allGameFromSteamJson.indexOf("}", indexOfDesiredGame);
+
+        return allGameFromSteamJson.substring(indexOfStartingBracket, indexOfClosingBracket + 1);
+
     }
 }
