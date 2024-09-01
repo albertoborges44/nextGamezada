@@ -2,6 +2,7 @@ package com.nextgamezada.games;
 
 import com.google.gson.Gson;
 import com.nextgamezada.steamApp.SteamApp;
+import com.nextgamezada.steamApp.SteamAppDetails;
 import com.nextgamezada.utils.RestApiClient;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import java.util.List;
 public class GameServiceImpl implements GameService{
 
     private final GameDAO dao;
+
+    Gson gson = new Gson();
 
     private final RestApiClient restApiClient;
 
@@ -48,17 +51,16 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public SteamApp searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException {
+    public SteamAppDetails searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException {
 
         HttpResponse<String> allGames = restApiClient.getAllSteamGames();
 
         int indexOfDesiredGame = allGames.body().indexOf(gameName);
         String stringJsonOfDesiredGame = trimDesiredGameJson(allGames.body(), indexOfDesiredGame);
 
-        Gson gson = new Gson();
         SteamApp steamApp = gson.fromJson(stringJsonOfDesiredGame, SteamApp.class);
 
-        return steamApp;
+        return getSteamAppDetailsFromGameId(steamApp.getAppid());
 
         //TODO: find the game, trim and parse from JSON to object
 
@@ -70,6 +72,36 @@ public class GameServiceImpl implements GameService{
         int indexOfClosingBracket = allGameFromSteamJson.indexOf("}", indexOfDesiredGame);
 
         return allGameFromSteamJson.substring(indexOfStartingBracket, indexOfClosingBracket + 1);
+
+    }
+
+    private String trimGameDetailBody(String gameDetailBody) {
+
+        int indexOfFirstAtribute = gameDetailBody.indexOf("success");
+
+        int indexOfStartingBracket = gameDetailBody.lastIndexOf("{", indexOfFirstAtribute);
+        int indexOfClosingBracket = gameDetailBody.lastIndexOf('}');
+
+        String trimmedString = gameDetailBody.substring(indexOfStartingBracket, indexOfClosingBracket);
+
+        return trimmedString;
+    }
+
+    private SteamAppDetails getSteamAppDetailsFromGameId(long steamAppId) throws URISyntaxException, IOException, InterruptedException {
+
+        try {
+
+            HttpResponse<String> gameDetails = restApiClient.getDetailsAboutSteamGame(steamAppId);
+
+            String trimmedGameDetails = trimGameDetailBody(gameDetails.body());
+
+            SteamAppDetails steamAppDetails = gson.fromJson(trimmedGameDetails, SteamAppDetails.class);
+
+            return steamAppDetails;
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("deu ruim", e);
+        }
 
     }
 }
