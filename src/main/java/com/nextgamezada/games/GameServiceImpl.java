@@ -60,10 +60,25 @@ public class GameServiceImpl implements GameService{
 
         SteamApp steamApp = gson.fromJson(stringJsonOfDesiredGame, SteamApp.class);
 
-        return getSteamAppDetailsFromGameId(steamApp.getAppid());
+        SteamAppDetails steamAppDetails = getSteamAppDetailsFromGameId(steamApp.getAppid());
 
-        //TODO: find the game, trim and parse from JSON to object
+//        dao.createGame(
+//                steamAppDetails.getData().getName(),
+//                sanitizeCurrencyPriceFromSteamApp(steamAppDetails.getData().getPrice_overview().getFinal_formatted()),
+//                steamAppDetails.getData().getGenres().get(0).getDescription());
 
+        dao.createGameFromSteamSearch(
+                steamAppDetails.getData().getName(),
+                sanitizeCurrencyPriceFromSteamApp(steamAppDetails.getData().getPrice_overview().getFinal_formatted()),
+                steamAppDetails.getData().getGenres().get(0).getDescription(),
+                steamAppDetails.getData().getCategories().stream().anyMatch(category -> category.getId() == 1),
+                steamAppDetails.getData().getPrice_overview().getDiscount_percent() != 0);
+
+        return steamAppDetails;
+    }
+
+    private BigDecimal sanitizeCurrencyPriceFromSteamApp(String stringPrice) {
+        return new BigDecimal(stringPrice.replace("R$", "").trim().replace(",", "."));
     }
 
     private String trimDesiredGameJson(String allGameFromSteamJson, int indexOfDesiredGame) {

@@ -1,5 +1,7 @@
 package com.nextgamezada.steamApp;
 
+import java.util.List;
+
 public class Data {
     private String type;
 
@@ -13,7 +15,11 @@ public class Data {
 
     private String short_description;
 
-    private PriceOverview priceOverview;
+    private PriceOverview price_overview;
+
+    private List<Categories> categories;
+
+    private List<Genre> genres;
 
     public String getType() {
         return type;
@@ -63,11 +69,27 @@ public class Data {
         this.short_description = short_description;
     }
 
-    public PriceOverview getPriceOverview() {
-        return priceOverview;
+    public PriceOverview getPrice_overview() {
+        return price_overview;
     }
 
-    public void setPriceOverview(PriceOverview priceOverview) {
-        this.priceOverview = priceOverview;
+    public void setPrice_overview(PriceOverview price_overview) {
+        this.price_overview = price_overview;
+    }
+
+    public List<Categories> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Categories> categories) {
+        this.categories = categories;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 }

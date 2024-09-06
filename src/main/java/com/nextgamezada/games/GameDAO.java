@@ -11,6 +11,8 @@ public interface GameDAO  {
 
     void createGame(String name, BigDecimal price, String genre);
 
+    void createGameFromSteamSearch(String name, BigDecimal price, String genre, boolean isCoop, boolean onSale);
+
     Long editGame(Game game);
 
     Long deletePool(List<Long> ids);

@@ -74,6 +74,20 @@ public class GameDaoImpl implements GameDAO{
         namedParameterJdbcTemplate.update(sql, parametros);
     }
 
+    public void createGameFromSteamSearch(String name, BigDecimal price, String genre, boolean isCoop, boolean onSale) {
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put(NAME, name);
+        parametros.put(PRICE, price);
+        parametros.put(GENRE, genre);
+        parametros.put(IS_COOP, isCoop ? 1 : 0);
+        parametros.put(ON_SALE, onSale ? 1 : 0);
+
+        String sql = "INSERT INTO Games (name, price, genre, isCoop, onSale)" +
+                " VALUES(:name, :price, :genre, :isCoop, :onSale)";
+
+        namedParameterJdbcTemplate.update(sql, parametros);
+    }
+
     @Override
     public Long editGame(Game game) {
         HashMap<String, Object> parametros = new HashMap<>();
