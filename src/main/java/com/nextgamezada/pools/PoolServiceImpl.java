@@ -39,7 +39,7 @@ public class PoolServiceImpl implements PoolService{
         return dao.deletePool(ids);
     }
 
-    public Game runPool(List<Game> gameList, int poolId) {
+    public Game runPool(List<Game> gameList, long poolId) {
 
         int index = ThreadLocalRandom.current().nextInt(gameList.size());
 

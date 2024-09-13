@@ -11,6 +11,6 @@ public interface PoolDAO {
 
     Long deletePool(List<Long> ids);
 
-    int setWinnerGameAndUpdatePoolStatus(int poolId, long gameId);
+    int setWinnerGameAndUpdatePoolStatus(long poolId, long gameId);
 
 }

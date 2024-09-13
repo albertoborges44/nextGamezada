@@ -26,7 +26,7 @@ public class GamesInPoolDaoImpl implements GamesInPoolDAO {
     }
 
     @Override
-    public List<Game> findByPoolId(int poolId) {
+    public List<Game> findByPoolId(long poolId) {
         Map<String, Object> parametros = new HashMap<>();
         parametros.put(ID, poolId);
 

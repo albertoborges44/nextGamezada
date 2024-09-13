@@ -13,5 +13,5 @@ public interface PoolService {
 
     Long deletePool(List<Long> ids);
 
-    Game runPool(List<Game> poolList, int poolId);
+    Game runPool(List<Game> poolList, long poolId);
 }

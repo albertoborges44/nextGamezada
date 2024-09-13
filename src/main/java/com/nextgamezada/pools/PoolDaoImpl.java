@@ -80,7 +80,7 @@ public class PoolDaoImpl implements PoolDAO{
     }
 
     @Override
-    public int setWinnerGameAndUpdatePoolStatus(int poolId, long gameId) {
+    public int setWinnerGameAndUpdatePoolStatus(long poolId, long gameId) {
         HashMap<String, Object> parametros = new HashMap<>();
         parametros.put(ID, poolId);
         parametros.put(WINNER_GAME, gameId);

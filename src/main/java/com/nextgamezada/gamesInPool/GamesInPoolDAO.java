@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GamesInPoolDAO {
 
-    List<Game> findByPoolId(int poolId);
+    List<Game> findByPoolId(long poolId);
 }

@@ -14,7 +14,7 @@ public class GamesInPoolServiceImpl implements GamesInPoolService{
         this.dao = dao;
     }
 
-    public List<Game> findByPoolId(int poolId) {
+    public List<Game> findByPoolId(long poolId) {
         return dao.findByPoolId(poolId);
     }
 }
