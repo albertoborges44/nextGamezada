@@ -18,6 +18,11 @@ public class GamesInPoolDaoImpl implements GamesInPoolDAO {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final String ID = "id";
+
+    private static final String GAME_ID = "gameId";
+
+    private static final String POOL_ID = "poolId";
+
     private static final String GAMENAME = "name";
     private static final String PRICE = "price";
     @Autowired
@@ -39,6 +44,20 @@ public class GamesInPoolDaoImpl implements GamesInPoolDAO {
                 """;
 
         return namedParameterJdbcTemplate.query(sql, parametros, new GamesInPoolMapper());
+    }
+
+    @Override
+    public void addGameToPool(long poolId, long gameId) {
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put(GAME_ID, gameId);
+        parametros.put(POOL_ID, poolId);
+
+        String sql = """
+                INSERT INTO "gamesInPool"("gameID", "poolID") 
+                VALUES(:gameId, :poolId)
+                """;
+
+        namedParameterJdbcTemplate.update(sql, parametros);
     }
 
     private static final class GamesInPoolMapper implements RowMapper<Game> {

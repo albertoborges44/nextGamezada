@@ -79,11 +79,11 @@ public class GameDaoImpl implements GameDAO{
         parametros.put(NAME, name);
         parametros.put(PRICE, price);
         parametros.put(GENRE, genre);
-        parametros.put(IS_COOP, isCoop ? 1 : 0);
-        parametros.put(ON_SALE, onSale ? 1 : 0);
+        //parametros.put(IS_COOP, isCoop);
+        parametros.put(ON_SALE, onSale);
 
-        String sql = "INSERT INTO Games (name, price, genre, isCoop, onSale)" +
-                " VALUES(:name, :price, :genre, :isCoop, :onSale)";
+        String sql = "INSERT INTO Games (name, price, genre, onSale)" +
+                " VALUES(:name, :price, :genre, :onSale)";
 
         namedParameterJdbcTemplate.update(sql, parametros);
     }

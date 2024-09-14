@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class GameServiceImpl implements GameService{
@@ -70,8 +71,10 @@ public class GameServiceImpl implements GameService{
         dao.createGameFromSteamSearch(
                 steamAppDetails.getData().getName(),
                 sanitizeCurrencyPriceFromSteamApp(steamAppDetails.getData().getPrice_overview().getFinal_formatted()),
-                steamAppDetails.getData().getGenres().get(0).getDescription(),
-                steamAppDetails.getData().getCategories().stream().anyMatch(category -> category.getId() == 1),
+                Objects.nonNull(steamAppDetails.getData().getGenres()) ?
+                        steamAppDetails.getData().getGenres().get(0).getDescription() : "",
+                Objects.nonNull(steamAppDetails.getData().getCategories()) ?
+                        steamAppDetails.getData().getCategories().stream().anyMatch(category -> category.getId() == 1) : Boolean.FALSE,
                 steamAppDetails.getData().getPrice_overview().getDiscount_percent() != 0);
 
         return steamAppDetails;

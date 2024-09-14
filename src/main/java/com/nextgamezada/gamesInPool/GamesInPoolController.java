@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,5 +31,12 @@ public class GamesInPoolController {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @PostMapping("/games/")
+    @ResponseBody
+    public ResponseEntity<?> addGameToPool(@RequestParam long poolId, @RequestParam long gameId) {
+        gamesInPoolService.addGameToPool(poolId, gameId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

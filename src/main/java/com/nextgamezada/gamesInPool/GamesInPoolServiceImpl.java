@@ -17,4 +17,9 @@ public class GamesInPoolServiceImpl implements GamesInPoolService{
     public List<Game> findByPoolId(long poolId) {
         return dao.findByPoolId(poolId);
     }
+
+    @Override
+    public void addGameToPool(long poolId, long gameId) {
+        dao.addGameToPool(poolId, gameId);
+    }
 }
