@@ -35,8 +35,8 @@ public class GameController {
     public ResponseEntity<?> getByName(@PathVariable("name") String name) throws URISyntaxException, IOException, InterruptedException {
         Game game = gameService.findByName(name);
         if(Objects.isNull(game)) {
-            SteamAppDetails steamAppDetails = gameService.searchGameInSteamLibrary(name);
-            return new ResponseEntity<SteamAppDetails>(steamAppDetails, HttpStatus.OK);
+            List<SteamAppDetails> steamAppDetailsList = gameService.searchGameInSteamLibrary(name);
+            return new ResponseEntity<List<SteamAppDetails>>(steamAppDetailsList, HttpStatus.OK);
         }
         if (Objects.isNull(game)) {
             return new ResponseEntity(new Error("Game with name" + name +

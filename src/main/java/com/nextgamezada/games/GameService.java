@@ -20,5 +20,5 @@ public interface GameService {
 
     Long deletePool(List<Long> ids);
 
-    SteamAppDetails searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException;
+    List<SteamAppDetails> searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException;
 }
