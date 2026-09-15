@@ -1,14 +1,12 @@
 package com.nextgamezada.games;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.nextgamezada.steamApp.SteamApp;
 import com.nextgamezada.steamApp.SteamAppDetails;
 import com.nextgamezada.utils.RestApiClient;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
@@ -57,13 +55,12 @@ public class GameServiceImpl implements GameService{
     @Override
     public List<SteamAppDetails> searchGameInSteamLibrary(String gameName) throws URISyntaxException, IOException, InterruptedException {
 
-        List<Integer> listOfAllGameOcurrences = new ArrayList<>();
+        List<Integer> listOfAllGameOcurrences;
         List<String> listJsonOfDesiredGame = new ArrayList<>();
         List<SteamAppDetails> listSteamAppDetails = new ArrayList<>();
 
         HttpResponse<String> allGames = restApiClient.getAllSteamGames();
 
-        int indexOfDesiredGame = allGames.body().indexOf(gameName);
         listOfAllGameOcurrences = findAllGameNameOcurrences(allGames.body(), gameName);
 
         for(int index : listOfAllGameOcurrences) {
@@ -79,20 +76,6 @@ public class GameServiceImpl implements GameService{
                 listSteamAppDetails.add(steamAppDetails);
             }
         }
-
-//        dao.createGame(
-//                steamAppDetails.getData().getName(),
-//                sanitizeCurrencyPriceFromSteamApp(steamAppDetails.getData().getPrice_overview().getFinal_formatted()),
-//                steamAppDetails.getData().getGenres().get(0).getDescription());
-
-        /*dao.createGameFromSteamSearch(
-                steamAppDetails.getData().getName(),
-                sanitizeCurrencyPriceFromSteamApp(steamAppDetails.getData().getPrice_overview().getFinal_formatted()),
-                Objects.nonNull(steamAppDetails.getData().getGenres()) ?
-                        steamAppDetails.getData().getGenres().get(0).getDescription() : "",
-                Objects.nonNull(steamAppDetails.getData().getCategories()) ?
-                        steamAppDetails.getData().getCategories().stream().anyMatch(category -> category.getId() == 1) : Boolean.FALSE,
-                steamAppDetails.getData().getPrice_overview().getDiscount_percent() != 0);*/
 
         return listSteamAppDetails;
     }
@@ -117,9 +100,7 @@ public class GameServiceImpl implements GameService{
         int indexOfStartingBracket = gameDetailBody.lastIndexOf("{", indexOfFirstAtribute);
         int indexOfClosingBracket = gameDetailBody.lastIndexOf('}');
 
-        String trimmedString = gameDetailBody.substring(indexOfStartingBracket, indexOfClosingBracket);
-
-        return trimmedString;
+        return gameDetailBody.substring(indexOfStartingBracket, indexOfClosingBracket);
     }
 
     private SteamAppDetails getSteamAppDetailsFromGameId(long steamAppId) throws URISyntaxException, IOException, InterruptedException {
@@ -132,19 +113,28 @@ public class GameServiceImpl implements GameService{
 
             SteamAppDetails steamAppDetails = gson.fromJson(trimmedGameDetails, SteamAppDetails.class);
 
-            if(!steamAppDetails.getData().getType().equals("game") && !steamAppDetails.getData().getType().equals("dlc")) {
-                return null;
+            if(validateIfSteamAppIsGameOrDlc(steamAppDetails)) {
+                return steamAppDetails;
             }
 
-            return steamAppDetails;
+            return null;
 
         } catch (RuntimeException e) {
-            throw new RuntimeException("deu ruim", e);
+            throw new RuntimeException("Error trying to extract game details: ", e);
         }
 
     }
 
-    private List<Integer> findAllGameNameOcurrences(String allGamesFromSteam, String gameName) throws IOException {
+    private boolean validateIfSteamAppIsGameOrDlc(SteamAppDetails steamAppDetails) {
+
+        boolean isSuccess = steamAppDetails.isSuccess();
+        boolean isGame = steamAppDetails.getData().getType().equals("game");
+        boolean isDlc = steamAppDetails.getData().getType().equals("dlc");
+
+        return isSuccess && (isGame || isDlc);
+    }
+
+    private List<Integer> findAllGameNameOcurrences(String allGamesFromSteam, String gameName) {
 
         List<Integer> listOfGamesIndexes = new ArrayList<>();
         int index = allGamesFromSteam.indexOf(gameName);

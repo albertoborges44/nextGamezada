@@ -1,6 +1,5 @@
 package com.nextgamezada.games;
 
-import com.nextgamezada.steamApp.SteamApp;
 import com.nextgamezada.steamApp.SteamAppDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +22,7 @@ public class GameController {
     }
 
     @GetMapping(value = "/getAll")
+    @CrossOrigin
     public ResponseEntity<List<Game>> getAllGames() {
         List<Game> gamesList = gameService.findByAll();
         if (gamesList.isEmpty()) {
@@ -36,12 +36,15 @@ public class GameController {
         Game game = gameService.findByName(name);
         if(Objects.isNull(game)) {
             List<SteamAppDetails> steamAppDetailsList = gameService.searchGameInSteamLibrary(name);
+
+            if(Objects.nonNull(steamAppDetailsList) && steamAppDetailsList.isEmpty()) {
+                return new ResponseEntity<>(new Error("Game with name" + name +
+                        " not found"), HttpStatus.NOT_FOUND);
+            }
+
             return new ResponseEntity<List<SteamAppDetails>>(steamAppDetailsList, HttpStatus.OK);
         }
-        if (Objects.isNull(game)) {
-            return new ResponseEntity(new Error("Game with name" + name +
-                    " not found"), HttpStatus.NOT_FOUND);
-        }
+
         return new ResponseEntity<Game>(game, HttpStatus.OK);
     }
 

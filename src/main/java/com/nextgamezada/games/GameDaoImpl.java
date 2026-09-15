@@ -100,15 +100,17 @@ public class GameDaoImpl implements GameDAO{
         parametros.put(ON_SALE, game.isOnSale());
         parametros.put(MAXPLAYERS, game.getMaxPlayers());
 
-        String sql = "UPDATE Games " +
-                "SET name = :name, " +
-                "isFinished = :isFinished," +
-                "isCoop = :isCoop, " +
-                "genre = :genre, " +
-                "price = :price, " +
-                "onSale = :onSale," +
-                "maxPlayers = :maxPLayers," +
-                "WHERE id = :id";
+        String sql = """
+                UPDATE Games  
+                SET name = :name,  
+                "isFinished"= :isFinished, 
+                "isCoop" = :isCoop,  
+                genre = :genre,  
+                price = :price,  
+                "onSale" = :onSale,  
+                maxPlayers = :maxPlayers  
+                WHERE id = :id
+                """;
 
         return (long) namedParameterJdbcTemplate.update(sql, parametros);
     }
