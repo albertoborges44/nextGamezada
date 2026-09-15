@@ -3,6 +3,7 @@ package com.nextgamezada.pools;
 import com.nextgamezada.games.Game;
 import com.nextgamezada.games.GameDAO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,16 +40,17 @@ public class PoolServiceImpl implements PoolService{
         return dao.deletePool(ids);
     }
 
+    @Override
+    @Transactional
     public Game runPool(List<Game> gameList, long poolId) {
 
         int index = ThreadLocalRandom.current().nextInt(gameList.size());
 
-        Game winnerGame;
-        try {
-            winnerGame = gameDAO.findByName(gameList.get(index).getName());
-            dao.setWinnerGameAndUpdatePoolStatus(poolId, winnerGame.getId());
-        } catch (Exception e) {
-            throw new RuntimeException("Error finding the game" + e.getMessage());
+        Game winnerGame = gameDAO.findByName(gameList.get(index).getName());
+        int updatedPools = dao.setWinnerGameAndUpdatePoolStatus(poolId, winnerGame.getId());
+
+        if (updatedPools == 0) {
+            throw new PoolNotOpenException(poolId);
         }
 
         return winnerGame;

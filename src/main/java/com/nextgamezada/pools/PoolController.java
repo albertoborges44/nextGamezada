@@ -33,7 +33,9 @@ public class PoolController {
     }
 
     @PostMapping(value = "/pool")
-    public ResponseEntity createPool(@RequestBody Pool pool, @RequestParam Long id) {
+    public ResponseEntity<?> createPool(@RequestBody Pool pool) {
+        Long id = poolService.createPool(pool);
+
         if(Objects.isNull(id)) {
             return new ResponseEntity<>(
                     new Error("Could not create pool"), HttpStatus.BAD_REQUEST);

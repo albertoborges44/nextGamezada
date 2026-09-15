@@ -1,5 +1,6 @@
 package com.nextgamezada.pools;
 
+import com.nextgamezada.enums.StatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,6 +18,7 @@ public class PoolDaoImpl implements PoolDAO{
     private static final String NAME = "name";
     private static final String SIZE = "size";
     private static final String STATUS = "status";
+    private static final String OPEN_STATUS = "openStatus";
     private static final String WINNER_GAME = "winner_game";
     private static final String ID_LIST = "ids";
     private static final String POOL_ID = "pool_id";
@@ -43,10 +45,13 @@ public class PoolDaoImpl implements PoolDAO{
         parametros.put(STATUS, pool.getStatus());
 
 
-        String sql = "INSERT INTO Pools (name, size, status)" +
-                "VALUES(:name, :size, :status)";
+        String sql = """
+                INSERT INTO Pools (name, size, status)
+                VALUES (:name, :size, :status)
+                RETURNING id
+                """;
 
-       return (long) namedParameterJdbcTemplate.update(sql, parametros);
+        return namedParameterJdbcTemplate.queryForObject(sql, parametros, Long.class);
     }
 
     @Override
@@ -84,10 +89,16 @@ public class PoolDaoImpl implements PoolDAO{
         HashMap<String, Object> parametros = new HashMap<>();
         parametros.put(ID, poolId);
         parametros.put(WINNER_GAME, gameId);
+        parametros.put(STATUS, StatusEnum.CONCLUDED.ordinal());
+        parametros.put(OPEN_STATUS, StatusEnum.OPEN.ordinal());
 
-        String sql = "UPDATE pools " +
-                "SET winner_game = :winner_game " +
-                "WHERE id = :id";
+        String sql = """
+                UPDATE pools
+                SET winner_game = :winner_game,
+                    status = :status
+                WHERE id = :id
+                  AND status = :openStatus
+                """;
 
         return namedParameterJdbcTemplate.update(sql, parametros);
     }
